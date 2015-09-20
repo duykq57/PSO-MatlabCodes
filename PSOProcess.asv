@@ -183,8 +183,12 @@ while t<=PSOConstants.MAX_ITERATION
 
         % step 5 - update fitness
         swarm(i).Fitness = ProblemSet.evaluate(PRBLEM_NAME,F,swarm(i).Location, PSOConstants.PROBLEM_DIMENSION);
+        
+
     end
     
+  
+
     t = t+1;
     max_iter = t;
     % update fitnessList
@@ -213,8 +217,7 @@ while t<=PSOConstants.MAX_ITERATION
     end
     BestFitnessEver(t+1) = gBest;
 end
-
-% display result
-disp('Num of collisions: ');
+disp('numcollision');
 disp(count);
+% display result
 visualize(saveLocationX, saveLocationY, obs, BestFitnessEver, count, max_iter);
