@@ -162,17 +162,15 @@ while t<=PSOConstants.MAX_ITERATION
                     /distance(newLoc, swarm(i).Location));
         for k2=1:PSOConstants.NUM_OF_STATIC_OBJS
             isCollisionObs = 0;
-            if k~= i
-                in = inpolygon(obs(k2).cordinate(1), obs(k2).cordinate(2), bound1, bound2);
-                if in~= 0
-                    isCollisionObs = 1;
-                end
-                d = distance(newLoc, obs(k2).cordinate);
-                if d<StaticObs.RADIUS+PSOConstants.RADIUS
-                    isCollisionObs = 1;
-                end
+            in = inpolygon(obs(k2).cordinate(1), obs(k2).cordinate(2), bound1, bound2);
+            if in~= 0
+               isCollisionObs = 1;
             end
-            if isCollision == 1
+            d = distance(newLoc, obs(k2).cordinate);
+            if d<StaticObs.RADIUS+PSOConstants.RADIUS
+               isCollisionObs = 1;
+            end
+            if isCollisionObs == 1
                 count = count + 1;
                 disp('collisionObs');
                 disp(count);

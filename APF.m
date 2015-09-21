@@ -1,6 +1,6 @@
 function veloOutput = APF(swarm, staticObs, index, iteration)
 radius = PSOConstants.RADIUS;
-rSeparation = 6*radius;
+rSeparation = 5*radius;
 r2 = 11*radius;
 r3 = 16*radius;
 G = 30;
@@ -8,7 +8,7 @@ vSeparation = [0 0];
 vAttraction = [0 0];
 % update vSeperation
 % avoid collisions
-Fmax = 30;
+Fmax = 45;
 k = sqrt(Fmax)/rSeparation;
    for i = 1:PSOConstants.SWARM_SIZE
        if i ~= index
