@@ -1,5 +1,5 @@
-for i=1:10
+for i=1:100
     disp('Test');
     disp(i);
-    PSOProcess;
+    resultTest(i) = PSOProcess();
 end

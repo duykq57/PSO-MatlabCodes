@@ -1,13 +1,14 @@
 % ------------------------------initialize-----------------------------%
-PRBLEM_NAME = 'Light intensity'
-F = getData();
+function resultTest = PSOProcess()
+PRBLEM_NAME = 'singleLuna'
+F = getData(PRBLEM_NAME);
 
 % initialize static obstacles
 obs(1) = StaticObs(35,-10);
-obs(2) = StaticObs(15, 27);
-obs(3) = StaticObs(-24, -12);
-obs(4) = StaticObs(1, 39);
-obs(5) = StaticObs(-3, -25);
+% obs(2) = StaticObs(15, 27);
+obs(2) = StaticObs(-24, -12);
+obs(3) = StaticObs(1, 39);
+obs(4) = StaticObs(-3, -25);
 % obs(6) = StaticObs(25, -35);
 % obs(7) = StaticObs(15, -25);
 % obs(8) = StaticObs(-20, 20);
@@ -88,6 +89,7 @@ while t<=PSOConstants.MAX_ITERATION
         
         % step 3 - update velocity
         vAPF = APF(swarm,obs, i, t); 
+%         vAPF = [0 0]
         for j=1:PSOConstants.PROBLEM_DIMENSION
             newVel(j) = PSOConstants.w(t)*swarm(i).Velocity(j)+ r1*PSOConstants.c1(t) * (pBestLocation(i,j) - swarm(i).Location(j))+r2*PSOConstants.c2(t) * (gBestLocation(j) - swarm(i).Location(j))+ 3*vAPF(j);
         end
@@ -191,17 +193,53 @@ while t<=PSOConstants.MAX_ITERATION
     end
      
     % check convergence
-    for i=1:PSOConstants.SWARM_SIZE
-        temp = 1;
-        for j=1:PSOConstants.SWARM_SIZE
-            if j~=i && distance(swarm(i).Location, swarm(j).Location) > 11*PSOConstants.RADIUS
-                temp = 0;
+%     for i=1:PSOConstants.SWARM_SIZE
+%         temp = 1;
+%         for j=1:PSOConstants.SWARM_SIZE
+%             if j~=i && distance(swarm(i).Location, swarm(j).Location) > 11*PSOConstants.RADIUS
+%                 temp = 0;
+%             end
+%         end
+%         if temp == 1
+%             t = PSOConstants.MAX_ITERATION+1;
+%             break;
+%         end
+%     end
+    % check convergence
+    % Adjacency Matrix
+    A = zeros(PSOConstants.SWARM_SIZE, PSOConstants.SWARM_SIZE);
+    for i1 = 1:PSOConstants.SWARM_SIZE
+        for i2 = (i1+1):PSOConstants.SWARM_SIZE
+            if distance(swarm(i1).Location, swarm(i2).Location) < PSOConstants.COMMUNICATION_RANGE*2
+                A(i1,i2) = 1;
+                A(i2,i1) = 1;
             end
         end
-        if temp == 1
-            t = PSOConstants.MAX_ITERATION+1;
-            break;
+        A(i1,i1) = 0;
+    end
+
+    % Degree Matrix
+    D = zeros(PSOConstants.SWARM_SIZE, PSOConstants.SWARM_SIZE);
+    for i1 = 1:PSOConstants.SWARM_SIZE
+        for i2 = 1:PSOConstants.SWARM_SIZE
+            if distance(swarm(i1).Location, swarm(i2).Location) < PSOConstants.COMMUNICATION_RANGE*2 && i1 ~= i2
+                D(i1,i1) = D(i1,i1)+1;
+            end
         end
+    end
+
+    % Laplacian Matrix
+    L = D - A;
+
+    eigen = sort(eig(L));    
+    lambda2(t) = eigen(2);
+    if lambda2(t) < 10^-6
+        lambda2(t) = 0; % because of its numerical method, matlab usually gives result at 10^-16, which is actually zero.
+    end
+
+    if lambda2(t) > 2
+        mar_iter = t;
+%         t = PSOConstants.MAX_ITERATION+1;
     end
     
     % save location to display
@@ -216,3 +254,9 @@ end
 disp('Num of collisions: ');
 disp(count);
 visualize(saveLocationX, saveLocationY, obs, BestFitnessEver, count, max_iter);
+
+resultTest = max_iter;
+m=linspace(1, max_iter, max_iter);
+figLambda = figure('Position', [100, 100, 1049, 895]);
+plot(m, lambda2,'LineWidth',2);
+end
