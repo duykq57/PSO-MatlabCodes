@@ -1,6 +1,6 @@
 classdef PSOConstants
     properties(Constant)
-        SWARM_SIZE = 15;
+        SWARM_SIZE = 5;
         MAX_ITERATION = 200;
         PROBLEM_DIMENSION = 2;
         w = linspace(.5,.01,200);

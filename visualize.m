@@ -14,7 +14,7 @@ for i=1:PSOConstants.NUM_OF_STATIC_OBJS
     obsY(i) = obs(i).cordinate(2);
     obsRadiusMatrix(i) = obs(i).RADIUS;
 end
-iteration = 200;
+% iteration = 200;
 for i=1:iteration
 
     clf;

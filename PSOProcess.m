@@ -1,6 +1,6 @@
 % ------------------------------initialize-----------------------------%
 function resultTest = PSOProcess()
-PRBLEM_NAME = 'singleLuna'
+PRBLEM_NAME = 'RealLuna2'
 F = getData(PRBLEM_NAME);
 
 % initialize static obstacles
@@ -237,9 +237,9 @@ while t<=PSOConstants.MAX_ITERATION
         lambda2(t) = 0; % because of its numerical method, matlab usually gives result at 10^-16, which is actually zero.
     end
 
-    if lambda2(t) > 2
+    if lambda2(t) > 0
         mar_iter = t;
-%         t = PSOConstants.MAX_ITERATION+1;
+        t = PSOConstants.MAX_ITERATION+1;
     end
     
     % save location to display
@@ -253,10 +253,10 @@ end
 % display result
 disp('Num of collisions: ');
 disp(count);
-visualize(saveLocationX, saveLocationY, obs, BestFitnessEver, count, max_iter);
-
 resultTest = max_iter;
-m=linspace(1, max_iter, max_iter);
-figLambda = figure('Position', [100, 100, 1049, 895]);
-plot(m, lambda2,'LineWidth',2);
+
+% visualize(saveLocationX, saveLocationY, obs, BestFitnessEver, count, max_iter);
+% m=linspace(1, max_iter, max_iter);
+% figLambda = figure('Position', [100, 100, 1049, 895]);
+% plot(m, lambda2,'LineWidth',2);
 end
